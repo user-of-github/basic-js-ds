@@ -22,32 +22,51 @@ const { NotImplementedError } = require('../extensions/index.js');
  *   }
  * }
  */
-function removeKFromList(list, item) {
-  let modified = list
 
-  if (modified !== null && modified.value === item) modified = modified.next
-
-  let current = modified
+const doesListHaveItem = (list, item) => {
+  let current = list
 
   while (current !== null) {
-    const next = current.next
-    
-    if (next !== null) {
-      const nextValue = next.value
-      if (nextValue === item) {
-        const nextNext = next.next
-        if (nextNext === null) {
-          current.next = null
-        } else {
-          current.next = nextNext
-        }
+    if (current.value === item) return true
+    current = current.next
+  }
+
+  return false
+}
+
+const removeSingleItem = (list, item) => {
+  let current = list
+
+  if (current === null) return list
+
+  if (current.value === item) return current.next // it's first element
+
+  while (current !== null && current.next !== null) {
+    const currentNext = current.next
+
+    if (currentNext !== null) {
+      if (currentNext.value === item) {
+        current.next = currentNext.next
       }
     }
 
     current = current.next
   }
 
-  return modified
+  return list
+}
+
+
+function removeKFromList(list, item) {
+  if (!doesListHaveItem(list, item)) return list
+
+  let response = list
+
+  while (doesListHaveItem(response, item)) {
+    response = removeSingleItem(response, item)
+  }
+
+  return response
 }
 
 module.exports = {
