@@ -1,157 +1,155 @@
-
-
-const { Node } = require('../extensions/list-tree.js');
+const {Node} = require('../extensions/list-tree.js');
 
 /**
-* Implement simple binary search tree according to task description
-* using Node from extensions
-*/
+ * Implement simple binary search tree according to task description
+ * using Node from extensions
+ */
 class BinarySearchTree {
-  constructor() {
-    this.rootLink = null
-    this.size = 0
-  }
+	constructor() {
+		this.rootLink = null
+		this.size = 0
+	}
 
-  root() {
-    return this.rootLink
-  }
+	root() {
+		return this.rootLink
+	}
 
-  add(data ) {
-    const newNode = new Node(data)
+	add(data) {
+		const newNode = new Node(data)
 
-    if (this.rootLink === null) {
-      this.rootLink = newNode
-      ++this.size
-      return
-    }
+		if (this.rootLink === null) {
+			this.rootLink = newNode
+				++this.size
+			return
+		}
 
-    let current = this.rootLink
-    let left = this.rootLink.left
-    let right = this.rootLink.right
-    let parent = current
+		let current = this.rootLink
+		let left = this.rootLink.left
+		let right = this.rootLink.right
+		let parent = current
 
-    while (current !== null) {
-      parent = current
+		while (current !== null) {
+			parent = current
 
-      left = current.left
-      right = current.right
+			left = current.left
+			right = current.right
 
-      current = data < current.data ? left : right
-    }
+			current = data < current.data ? left : right
+		}
 
-    if (data > parent.data) parent.right = newNode
-    else parent.left = newNode
+		if (data > parent.data) parent.right = newNode
+		else parent.left = newNode
 
-    newNode.parent = parent
+		newNode.parent = parent
 
-    ++this.size
-  }
+			++this.size
+	}
 
-  
-  has(data) {
-    if (this.rootLink === null) return false
 
-    let current = this.rootLink
+	has(data) {
+		if (this.rootLink === null) return false
 
-    let left = this.rootLink.left
-    let right = this.rootLink.right
+		let current = this.rootLink
 
-    while (current !== null) {
-      console.log(current, data)
-      left = current.left
-      right = current.right
+		let left = this.rootLink.left
+		let right = this.rootLink.right
 
-      if (data === current.data) return true
+		while (current !== null) {
+			console.log(current, data)
+			left = current.left
+			right = current.right
 
-      current = data > current.data ? right : left
-    }
+			if (data === current.data) return true
 
-    return false
-  }
+			current = data > current.data ? right : left
+		}
 
-  find( data ) {
-    let current = this.rootLink
+		return false
+	}
 
-    while (current !== null) {
-      const left = current.left
-      const right = current.right
+	find(data) {
+		let current = this.rootLink
 
-      if (data === current.data) break
+		while (current !== null) {
+			const left = current.left
+			const right = current.right
 
-      current = data > current.data ? right : left
-    }
+			if (data === current.data) break
 
-    return current
-  }
+			current = data > current.data ? right : left
+		}
 
-  getMaximumValueFrom(start) {
-    let response = start
+		return current
+	}
 
-    while (response.right !== null) response = response.right
+	getMaximumValueFrom(start) {
+		let response = start
 
-    return response;
-  }
+		while (response.right !== null) response = response.right
 
-  removeByPointer(target) {
-    if (target.left !== null && target.right != null) {
-      let localMax = this.getMaximumValueFrom(target.left)
-      target.data = localMax.data
-      this.removeByPointer(localMax) // maximum 1 call
-  } else if (target.left !== null) {
-      (target === target.parent.left) ? (target.parent.left = target.left) : (target.parent.right = target.left)
-  } else if (target.right !== null) {
-      (target === target.parent.right) ? (target.parent.right = target.right) : (target.parent.left = target.right)
-  } else {  // is it root (in that case it is the only left)
-      if (target === this.rootLink)
-          target = this.rootLink = null
-      else
-          (target === target.parent.left) ? (target.parent.left = null) : (target.parent.right = null)
-  }
-  }
+		return response;
+	}
 
-  remove(data) {
-    const searchElement = this.find(data)
+	removeByPointer(target) {
+		if (target.left !== null && target.right != null) {
+			let localMax = this.getMaximumValueFrom(target.left)
+			target.data = localMax.data
+			this.removeByPointer(localMax) // maximum 1 call
+		} else if (target.left !== null) {
+			(target === target.parent.left) ? (target.parent.left = target.left) : (target.parent.right = target.left)
+		} else if (target.right !== null) {
+			(target === target.parent.right) ? (target.parent.right = target.right) : (target.parent.left = target.right)
+		} else { // is it root (in that case it is the only left)
+			if (target === this.rootLink)
+				target = this.rootLink = null
+			else
+				(target === target.parent.left) ? (target.parent.left = null) : (target.parent.right = null)
+		}
+	}
 
-    if (searchElement !== null ) {
-      this.removeByPointer(searchElement)
-      --this.size
-    }
-        
+	remove(data) {
+		const searchElement = this.find(data)
 
-  if (this.size === 0) this.rootLink = null
-  }
+		if (searchElement !== null) {
+			this.removeByPointer(searchElement)
+				--this.size
+		}
 
-  min() {
-    if (this.rootLink === null) return null
 
-    let current = this.rootLink
+		if (this.size === 0) this.rootLink = null
+	}
 
-    while (current.left !== null) current = current.left
+	min() {
+		if (this.rootLink === null) return null
 
-    return current.data
-  }
+		let current = this.rootLink
 
-  max() {
-    if (this.rootLink === null) return null
+		while (current.left !== null) current = current.left
 
-    let current = this.rootLink
+		return current.data
+	}
 
-    while (current !== null && current.right !== null) current = current.right
+	max() {
+		if (this.rootLink === null) return null
 
-    return current.data
-  }
+		let current = this.rootLink
 
-  recursiveInOrderTraverse(currentNode) {
-    currentNode.left!== null && this.recursiveInOrderTraverse(currentNode.left)
-    console.log(currentNode.data)
-    currentNode.right !== null && this.recursiveInOrderTraverse(currentNode.right)
-}
+		while (current !== null && current.right !== null) current = current.right
 
-print() {
-  this.rootLink !== null && this.recursiveInOrderTraverse(this.rootLink)
-}
+		return current.data
+	}
+
+	recursiveInOrderTraverse(currentNode) {
+		currentNode.left !== null && this.recursiveInOrderTraverse(currentNode.left)
+		console.log(currentNode.data)
+		currentNode.right !== null && this.recursiveInOrderTraverse(currentNode.right)
+	}
+
+	print() {
+		this.rootLink !== null && this.recursiveInOrderTraverse(this.rootLink)
+	}
 }
 
 module.exports = {
-  BinarySearchTree
+	BinarySearchTree
 };
